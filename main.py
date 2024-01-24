@@ -13,7 +13,7 @@ print(tf.__version__)
 app = FastAPI()
 
 origins = [
-    "https://plant-disease-classification.netlify.app/",
+    "https://plant-disease-classification.netlify.app",
     "http://localhost",
     "http://localhost:5173",
 ]
@@ -44,10 +44,14 @@ async def predict(
     predicted_class = class_names[np.argmax(prediction[0])]
     confidence = round(np.max(prediction[0])*100,2)
     print(predicted_class,confidence)
-    return {
+    response = {
         "class": predicted_class,
         "confidence": float(confidence)
     }
+    return JSONResponse(
+        content=response,
+        headers={"Access-Control-Allow-Origin": "https://plant-disease-classification.netlify.app"}
+    )
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
