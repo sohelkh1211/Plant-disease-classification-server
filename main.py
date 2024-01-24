@@ -13,7 +13,7 @@ print(tf.__version__)
 app = FastAPI()
 
 origins = [
-    "https://plant-disease-classification.netlify.app",
+    "https://plant-disease-classification.netlify.app/",
     "http://localhost",
     "http://localhost:5173",
 ]
