@@ -13,9 +13,9 @@ print(tf.__version__)
 app = FastAPI()
 
 origins = [
+    "https://plant-disease-classification.netlify.app",
     "http://localhost",
     "http://localhost:5173",
-    "https://plant-disease-classification.netlify.app",
 ]
 app.add_middleware(
     CORSMiddleware,
