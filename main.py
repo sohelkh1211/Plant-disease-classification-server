@@ -57,7 +57,7 @@ if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
     if os.environ.get("ENV") == "production":
-        gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --host {host} --port {port}"
+        gunicorn_cmd = f"gunicorn -t 120 main:app --host {host} --port {port}"
         os.system(gunicorn_cmd)
     else:
         uvicorn_cmd = f"uvicorn main:app --host {host} --port {port} --reload"
