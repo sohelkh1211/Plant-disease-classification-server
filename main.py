@@ -56,6 +56,9 @@ async def predict(
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
-    uvicorn_cmd = f"main:app --host {host} --port {port} --reload"
-    gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd}"
-    os.system(gunicorn_cmd)
+    if os.environ.get("ENV") == "production":
+        gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --host {host} --port {port}"
+        os.system(gunicorn_cmd)
+    else:
+        uvicorn_cmd = f"uvicorn main:app --host {host} --port {port} --reload"
+        os.system(uvicorn_cmd)
