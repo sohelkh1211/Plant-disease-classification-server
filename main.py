@@ -50,7 +50,7 @@ async def predict(
     }
     return JSONResponse(
         content=response,
-        headers={"Access-Control-Allow-Origin": "https://plant-disease-classification.netlify.app"}
+        headers={"Access-Control-Allow-Origin": "*"}
     )
 
 if __name__ == "__main__":
