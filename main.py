@@ -51,6 +51,6 @@ async def predict(
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
-    uvicorn_cmd = f"main:app --host {host} --port {port} --reload"
+    uvicorn_cmd = f"main:app --host {host} --port {port}"
     gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd} --timeout 60"
     os.system(gunicorn_cmd)
