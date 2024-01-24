@@ -38,27 +38,19 @@ async def predict(
     file: UploadFile = File(...)
 ):
     image = read_file_as_image(await file.read())
-    # print(image)
     image_batch = np.expand_dims(image,axis=0)
     prediction = model.predict(image_batch)
     predicted_class = class_names[np.argmax(prediction[0])]
     confidence = round(np.max(prediction[0])*100,2)
-    print(predicted_class,confidence)
     response = {
         "class": predicted_class,
         "confidence": float(confidence)
     }
-    return JSONResponse(
-        content=response,
-        headers={"Access-Control-Allow-Origin": "*"}
-    )
+    return response
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
-    if os.environ.get("ENV") == "production":
-        gunicorn_cmd = f"gunicorn -t 120 main:app --host {host} --port {port}"
-        os.system(gunicorn_cmd)
-    else:
-        uvicorn_cmd = f"uvicorn main:app --host {host} --port {port} --reload"
-        os.system(uvicorn_cmd)
+    uvicorn_cmd = f"main:app --host {host} --port {port} --reload"
+    gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd} --timeout 60"
+    os.system(gunicorn_cmd)
