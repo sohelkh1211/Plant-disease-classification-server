@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import numpy as np
@@ -46,11 +47,14 @@ async def predict(
         "class": predicted_class,
         "confidence": float(confidence)
     }
-    return response
+    return JSONResponse(
+        content=response,
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
     uvicorn_cmd = f"main:app --host {host} --port {port}"
-    gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd} --timeout 60"
+    gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd} --timeout 120"
     os.system(gunicorn_cmd)
