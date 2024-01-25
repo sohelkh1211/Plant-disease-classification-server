@@ -13,6 +13,14 @@ model = tf.keras.models.load_model("models/my_model.h5")
 print(tf.__version__)
 app = FastAPI()
 
+def build_cors_preflight_headers():
+    return {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Credentials": "true",
+    }
+
 origins = [
     "https://plant-disease-classification.netlify.app",
     "http://localhost",
@@ -20,7 +28,7 @@ origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,6 +59,10 @@ async def predict(
         content=response,
         headers={"Access-Control-Allow-Origin": "*"}
     )
+
+@app.options("/predict")
+def options_predict(request: Request):
+    return JSONResponse(content={}, headers=build_cors_preflight_headers())
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
