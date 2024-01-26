@@ -63,10 +63,3 @@ async def predict(
 @app.options("/predict")
 def options_predict(request: Request):
     return JSONResponse(content={}, headers=build_cors_preflight_headers())
-
-if __name__ == "__main__":
-    host = os.environ.get("HOST", "0.0.0.0")
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn_cmd = f"main:app --host {host} --port {port}"
-    gunicorn_cmd = f"gunicorn -w 4 -k uvicorn.workers.UvicornWorker {uvicorn_cmd} --timeout 120"
-    os.system(gunicorn_cmd)
