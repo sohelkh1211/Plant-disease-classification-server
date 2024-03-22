@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 def read_file_as_image(data):
-    image = np.array(Image.open(BytesIO(data)))
+    image = np.array(Image.open(BytesIO(data)).convert("RGB").resize((256, 256)))
     return image
 
 @app.get("/ping")
